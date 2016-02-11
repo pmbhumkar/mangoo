@@ -44,7 +44,7 @@ static int mf_getattr(const char *path, struct stat *stbuf)
 	if ((error = mangoo_open(ms, path, mangoo_attr_interface, &handle))) {
 		goto errout1;
 	}
-
+	printf("Hello")
 	printf("mf_getattr:2 %s\n", path);
 	if ((error = mattr_getuid(handle, &stbuf->st_uid)))
 		goto errout2;
