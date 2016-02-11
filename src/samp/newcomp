@@ -1,0 +1,3 @@
+#!/bin/bash
+gcc -g -I../lang/c/include writenew.c -o writenew -L../lang/c/lib -lmangoo -L../stores/dbfs -ldbfs -L/usr/lib/i386-linux-gnu -ldb
+

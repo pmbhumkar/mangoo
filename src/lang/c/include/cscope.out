@@ -1,0 +1,942 @@
+cscope 15 $HOME/mangoo-0.2/src/lang/c/include               0000005019
+	@mangoo.h
+
+10 #iâdeà
+_MANGOO_H
+
+
+11 
+	#_MANGOO_H
+
+
+	)
+
+13 
+	~<mªgoocÚf.h
+>
+
+15 
+	~<sys/¡©.h
+>
+
+17 
+	emªgoo_ty³s
+ {
+
+18 
+	mmªgoo_cÚš”
+,
+
+19 
+	mmªgoo_d©a
+,
+
+22 
+	emªgoo_š‹rçûs
+ {
+
+23 
+	mmªgoo_¡»am_š‹rçû
+,
+
+24 
+	mmªgoo_dœeùÜy_š‹rçû
+,
+
+25 
+	mmªgoo_©Œ_š‹rçû
+
+
+28 
+	tmdœ_fËr_t
+(*
+	tfhªdË
+, cÚ¡ *
+	tÇme
+, 
+	tmªgoo_ty³s
+ 
+	tty³
+);
+
+	@mangooapp.h
+
+10 #iâdeà
+_MAPP_H
+
+
+11 
+	#_MAPP_H
+
+
+	)
+
+13 
+	~<mªgoo.h
+>
+
+15 
+	gmªgoo_¡Üe
+;
+
+16 
+	gmªgoo_hªdË
+;
+
+18 
+mªgoo_š™¡Üe
+(cÚ¡ *
+scheme
+, cÚ¡ *
+¾
+, 
+mªgoo_¡Üe
+ **
+ms
+);
+
+19 
+mªgoo_şo£¡Üe
+(
+mªgoo_¡Üe
+ *
+ms
+);
+
+22 
+mªgoo_İ’
+(
+mªgoo_¡Üe
+ *
+ms
+, cÚ¡ *
+loÿtÜ
+, 
+mªgoo_š‹rçûs
+ 
+mi
+,
+
+23 
+mªgoo_hªdË
+ **
+hªdË
+);
+
+24 
+mªgoo_ü—‹
+(
+mªgoo_¡Üe
+ *
+ms
+, cÚ¡ *
+loÿtÜ
+, 
+mode_t
+ 
+mode
+, 
+mªgoo_ty³s
+ 
+mt
+);
+
+25 
+mªgoo_şo£
+(
+mªgoo_hªdË
+ *
+hªdË
+);
+
+26 
+mªgoo_d–‘e
+(
+mªgoo_¡Üe
+ *
+ms
+, cÚ¡ *
+loÿtÜ
+);
+
+29 
+m¡»am_»ad
+(
+mªgoo_hªdË
+ *
+hªdË
+, *
+buf
+, 
+size_t
+ *
+size
+, 
+off_t
+ 
+off£t
+);
+
+30 
+m¡»am_wr™e
+(
+mªgoo_hªdË
+ *
+hªdË
+, cÚ¡ *
+buf
+, 
+size_t
+ *
+size
+, 
+off_t
+ 
+off£t
+);
+
+33 
+mdœ_»ad
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+mdœ_fËr_t
+ 
+fËr
+, *
+fhªdË
+);
+
+36 
+m©Œ_g‘ty³
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+mªgoo_ty³s
+ *
+mt
+);
+
+38 
+m©Œ_g‘size
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+off_t
+ *
+size
+);
+
+39 
+m©Œ_£tsize
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+off_t
+ 
+size
+);
+
+41 
+m©Œ_g‘mtime
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+time_t
+ *
+mtime
+);
+
+42 
+m©Œ_£tmtime
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+time_t
+ 
+mtime
+);
+
+44 
+m©Œ_g‘©ime
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+time_t
+ *
+©ime
+);
+
+45 
+m©Œ_£time
+(
+mªgoo_hªdË
+ *
+hªdË
+, 
+time_t
+ 
+©ime
+);
+
+47 
+m©Œ_g‘mode
+(
+mªgoo_hªdË
+ *
+mh
+, 
+mode_t
+ *
+mode
+);
+
+48 
+m©Œ_£tmode
+(
+mªgoo_hªdË
+ *
+mh
+, 
+mode_t
+ 
+mode
+);
+
+49 
+m©Œ_chmod
+(
+mªgoo_hªdË
+ *
+mh
+,
+mode_t
+ 
+mode
+);
+
+50 
+m©Œ_chown
+(
+mªgoo_hªdË
+ *
+mh
+,
+uid_t
+ 
+Ãwuid
+,
+gid_t
+ 
+Ãwgid
+);
+
+52 
+m©Œ_g‘uid
+(
+mªgoo_hªdË
+ *
+mh
+, 
+uid_t
+ *
+uid
+);
+
+53 
+m©Œ_£tuid
+(
+mªgoo_hªdË
+ *
+mh
+, 
+uid_t
+ 
+uid
+);
+
+55 
+m©Œ_g‘gid
+(
+mªgoo_hªdË
+ *
+mh
+, 
+gid_t
+ *
+gid
+);
+
+56 
+m©Œ_£tgid
+(
+mªgoo_hªdË
+ *
+mh
+, 
+gid_t
+ 
+gid
+);
+
+	@mangooconf.h
+
+5 
+	#HAVE_INTTYPES_H
+ 1
+
+	)
+
+9 
+	#HAVE_MALLOC
+ 1
+
+	)
+
+12 
+	#HAVE_MALLOC_H
+ 1
+
+	)
+
+15 
+	#HAVE_MEMORY_H
+ 1
+
+	)
+
+18 
+	#HAVE_MEMSET
+ 1
+
+	)
+
+21 
+	#HAVE_STDINT_H
+ 1
+
+	)
+
+24 
+	#HAVE_STDLIB_H
+ 1
+
+	)
+
+27 
+	#HAVE_STRCHR
+ 1
+
+	)
+
+30 
+	#HAVE_STRDUP
+ 1
+
+	)
+
+33 
+	#HAVE_STRERROR
+ 1
+
+	)
+
+36 
+	#HAVE_STRINGS_H
+ 1
+
+	)
+
+39 
+	#HAVE_STRING_H
+ 1
+
+	)
+
+42 
+	#HAVE_STRSTR
+ 1
+
+	)
+
+45 
+	#HAVE_SYS_STAT_H
+ 1
+
+	)
+
+48 
+	#HAVE_SYS_TYPES_H
+ 1
+
+	)
+
+51 
+	#HAVE_UNISTD_H
+ 1
+
+	)
+
+54 
+	#PACKAGE
+ "mªgoo"
+
+	)
+
+57 
+	#PACKAGE_BUGREPORT
+ ""
+
+	)
+
+60 
+	#PACKAGE_NAME
+ "mªgoo"
+
+	)
+
+63 
+	#PACKAGE_STRING
+ "mªgoØ0.2"
+
+	)
+
+66 
+	#PACKAGE_TARNAME
+ "mªgoo"
+
+	)
+
+69 
+	#PACKAGE_URL
+ ""
+
+	)
+
+72 
+	#PACKAGE_VERSION
+ "0.2"
+
+	)
+
+75 
+	#STDC_HEADERS
+ 1
+
+	)
+
+78 
+	#VERSION
+ "0.2"
+
+	)
+
+92 #iâdeà
+__ılu¥lus
+
+
+	@mangoostore.h
+
+10 #iâdeà
+_MSTORE_H
+
+
+11 
+	#_MSTORE_H
+
+
+	)
+
+13 
+	~<mªgoo.h
+>
+
+16 
+	smªgoo_¡Üe
+ {
+
+17 
+mªgoo_İ”©iÚs
+ *
+	mms_İs
+;
+
+21 
+	smªgoo_hªdË
+
+
+23 
+mªgoo_š‹rçûs
+ 
+	mmh_š‹rçû
+;
+
+24 *
+	mmh_fveùÜ
+;
+
+27 
+	smªgoo_İ”©iÚs
+ {
+
+28 (*
+	mmo_š™¡Üe
+)(cÚ¡ *
+	m¾
+, 
+mªgoo_¡Üe
+ **
+	m¡Ü•
+);
+
+30 (*
+	mmo_şo£¡Üe
+)(
+mªgoo_¡Üe
+ *
+	m¡Ü•
+);
+
+31 (*
+	mmo_g‘©Œ
+)(
+mªgoo_¡Üe
+ *
+	m¡Ü•
+, cÚ¡ *
+	mloÿtÜ
+, 
+¡©
+ *
+	m¡©p
+);
+
+32 (*
+	mmo_İ’
+)(
+mªgoo_¡Üe
+ *
+	m¡Ü•
+, cÚ¡ *
+	mloÿtÜ
+, 
+mªgoo_š‹rçûs
+ 
+	mmi
+,
+
+33 
+mªgoo_hªdË
+**
+	mhªdË
+);
+
+34 (*
+	mmo_ü—‹
+)(
+mªgoo_¡Üe
+ *
+	m¡Ü•
+, cÚ¡ *
+	mloÿtÜ
+, 
+mode_t
+ 
+	mmode
+,
+
+35 
+mªgoo_ty³s
+ 
+	mmt
+);
+
+36 (*
+	mmo_d–‘e
+)(
+mªgoo_¡Üe
+ *
+	m¡Ü•
+, cÚ¡ *
+	mloÿtÜ
+);
+
+39 
+	smªgoo_¡»am_İ”©iÚs
+ {
+
+40 (*
+	mmso_»ad
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, *
+	mbuf
+, 
+size_t
+ *
+	msize
+, 
+off_t
+ 
+	moff£t
+);
+
+41 (*
+	mmso_wr™e
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, cÚ¡ *
+	mbuf
+, 
+size_t
+ *
+	msize
+, 
+off_t
+ 
+	moff£t
+);
+
+42 (*
+	mmso_şo£
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+);
+
+45 
+	smªgoo_dœeùÜy_İ”©iÚs
+ {
+
+46 (*
+	mmdo_»ad
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+mdœ_fËr_t
+ 
+	mfËr
+, *
+	mfšfo
+);
+
+47 (*
+	mmdo_şo£
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+);
+
+50 
+	smªgoo_©Œ_İ”©iÚs
+ {
+
+51 (*
+	mmao_g‘ty³
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+mªgoo_ty³s
+ *
+	mty³
+);
+
+53 (*
+	mmao_g‘size
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+off_t
+ *
+	msize
+);
+
+54 (*
+	mmao_£tsize
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+off_t
+ 
+	msize
+);
+
+56 (*
+	mmao_g‘mtime
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+time_t
+ *
+	mmtime
+);
+
+57 (*
+	mmao_£tmtime
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+time_t
+ 
+	mmtime
+);
+
+59 (*
+	mmao_g‘©ime
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+time_t
+ *
+	m©ime
+);
+
+60 (*
+	mmao_£time
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+, 
+time_t
+ 
+	m©ime
+);
+
+62 (*
+	mmao_g‘mode
+)(
+	mmªgoo_hªdË
+ *, 
+mode_t
+ *
+	mmode
+);
+
+63 (*
+	mmao_£tmode
+)(
+	mmªgoo_hªdË
+ *, 
+mode_t
+ 
+	mmode
+);
+
+64 (*
+	mmao_chmod
+)(
+	mmªgoo_hªdË
+ *,
+mode_t
+ 
+	mmode
+);
+
+66 (*
+	mmao_g‘uid
+)(
+	mmªgoo_hªdË
+ *, 
+uid_t
+ *
+	muid
+);
+
+67 (*
+	mmao_£tuid
+)(
+	mmªgoo_hªdË
+ *, 
+uid_t
+ 
+	muid
+);
+
+69 (*
+	mmao_g‘gid
+)(
+	mmªgoo_hªdË
+ *, 
+gid_t
+ *
+	mgid
+);
+
+70 (*
+	mmao_£tgid
+)(
+	mmªgoo_hªdË
+ *, 
+gid_t
+ 
+	mgid
+);
+
+71 (*
+	mmao_chown
+)(
+	mmªgoo_hªdË
+ *,
+uid_t
+ 
+	mÃwuid
+,
+gid_t
+ 
+	mÃwgid
+);
+
+73 (*
+	mmao_şo£
+)(
+mªgoo_hªdË
+ *
+	mhªdË
+);
+
+	@
+1
+.
+1
+/usr/include
+4
+48
+mangoo.h
+mangooapp.h
+mangooconf.h
+mangoostore.h

@@ -1,0 +1,116 @@
+--- newmangoofuse.c	2015-02-24 23:59:03.078738782 +0530
++++ mangoofuse.c	2014-11-18 12:16:57.000000000 +0530
+@@ -17,16 +17,11 @@
+ #define FUSE_USE_VERSION 26
+ #include <fuse/fuse.h>
+ #include <fuse/fuse_lowlevel.h>
+-#include<db.h>
++
+ #include <mangooapp.h>
+ 
+-#define DBENV_DIR "TXNAPP"
+-
+ static struct mangoo_store *ms;
+ 
+-DB_ENV *dbenv;
+-const char *mypath="TXNAPP";
+-
+ struct mf_dir {
+ 	struct mangoo_handle *handle;
+ 	off_t cur_off;
+@@ -214,78 +209,12 @@
+ 	return -error;
+ }
+ 
+-void env_dir_create()
+-{
+-  struct mangoo_handle *handle=NULL;
+-  enum mangoo_types mt;
+-
+-  int error;
+- above:
+-  if(error=mangoo_open(ms,mypath,mangoo_attr_interface,&handle))
+-    {
+-      printf("OPEN ERROR\n");
+-      mangoo_create(ms,mypath,S_IRWXU,mangoo_container);
+-      goto above;
+-    }
+-  if(error=mattr_gettype(handle,&mt))
+-    {
+-      printf("TYPE ERROR\n");
+-      return;
+-    }
+-  if(mt==mangoo_container)
+-    printf("Directory\n");
+-  else
+-    printf("File\n");
+-  (void)mangoo_close(handle);
+-}
+-
+-void env_open(DB_ENV **dbenvp)
+-{
+-  DB_ENV *mydbenv;
+-  int ret;
+-  
+-  /* Create the environment handle. */
+-  if ((ret = db_env_create(&mydbenv, 0)) != 0) {
+-    fprintf(stderr,
+-	    "txnapp: db_env_create: %s\n", db_strerror(ret));
+-    exit (1);
+-  }
+-
+-
+-  /* Set up error handling. */
+-  mydbenv->set_errpfx(mydbenv, "txnapp");
+-
+-
+-  /*
+-   * Open a transactional environment:
+-   *create if it doesn't exist
+-   *free-threaded handle
+-   *run recovery
+-   *read/write owner only
+-   */
+-  if ((ret = mydbenv->open(mydbenv, "TXNAPP",
+-			      DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG |
+-			 DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER | DB_THREAD,
+-			 S_IRUSR | S_IWUSR)) != 0) {
+-
+-    printf("Error in OPENING ENVIRONMENT...!!! \n");    
+-    (void)mydbenv->close(mydbenv, 0);
+-    mydbenv->err(mydbenv, ret, "dbenv->open: %s", mypath);
+-    exit (1);
+-  }
+-
+-  *dbenvp = mydbenv;
+-}
+-
+ static int mf_read(const char *path, char *buf, size_t size, off_t offset,
+ 		      struct fuse_file_info *fi)
+ {
+ 	struct mangoo_handle *handle = (struct mangoo_handle*)fi->fh;
+ 	int error;
+ 
+-	env_dir_create();
+-	env_open(&dbenv);
+-	printf("Environment Opened\n");
+ 	printf("mf_read:1 %s\n", path);
+ 	if (!fi->fh)
+ 		return -EINVAL;
+@@ -300,8 +229,6 @@
+ {
+ 	struct mangoo_handle *handle = (struct mangoo_handle*)fi->fh;
+ 	int error;
+-	env_dir_create();
+-	env_open(&dbenv);
+ 
+ 	printf("mf_write:1 %s\n", path);
+ 	if (!fi->fh)
+@@ -309,7 +236,6 @@
+ 	printf("mf_write:2 %lx\n", (uint64_t)handle);
+ 	if ((error = mstream_write(handle, buf, &size, offset)))
+ 		return -error;
+-
+ 	return size;
+ }
+ 

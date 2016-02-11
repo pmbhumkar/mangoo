@@ -1,0 +1,8 @@
+2014-02-25 Amit S. Kale(amitkale@geeksofpune.in)
+	* src/apps/fuse/mangoofuse.c Corrected to use mangoo_types instead of mangoo_interfaces when
+	filling directories. Added directory and file remove functionality.
+	* src/lang/c/lib/mangoo.c Added directory and file delete.
+	* src/stores/dbfs/attr.c Added attribute delete.
+	* src/stores/dbfs/dbfs.c Added file and directory remove.
+	* src/stores/dbfs/dir.c Restrured to add directory remove.
+	* src/stores/dbfs/stream.c Added file remove.

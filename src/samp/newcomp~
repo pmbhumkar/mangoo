@@ -1,0 +1,4 @@
+#!/bin/bash
+gcc -g -I../lang/c/include sampwrite.c -o sampwrite -L../lang/c/lib -lmangoo -L../stores/dbfs -ldbfs -L/usr/lib/i386-linux-gnu -ldb
+gcc -g -I../lang/c/include sampread.c -o sampread -L../lang/c/lib -lmangoo -L../stores/dbfs -ldbfs -L/usr/lib/i386-linux-gnu -ldb
+gcc -g -I../lang/c/include concwrite.c -o concwrite -L../lang/c/lib -lmangoo -L../stores/dbfs -ldbfs -L/usr/lib/i386-linux-gnu -ldb -lpthread

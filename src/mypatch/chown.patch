@@ -1,0 +1,208 @@
+Binary files src/apps/fuse/mangoofuse and src2/apps/fuse/mangoofuse differ
+diff -urp src/apps/fuse/mangoofuse.c src2/apps/fuse/mangoofuse.c
+--- src/apps/fuse/mangoofuse.c	2014-08-19 18:42:06.708125000 +0530
++++ src2/apps/fuse/mangoofuse.c	2014-11-18 12:16:57.139506548 +0530
+@@ -121,6 +121,20 @@ static int mf_chmod(const char *path, mo
+   return 0;  
+ }
+ 
++static int mf_chown(const char *path,uid_t newuid,gid_t newgid)
++{
++  struct mangoo_handle *handle = NULL;
++  int error;
++  printf("mf_chown\n");
++  if ((error = mangoo_open(ms, path, mangoo_attr_interface, &handle))) { 
++    printf("mf_getattr: %s\n", strerror(error));
++    return -error;
++  }
++  if((error = mattr_chown(handle,newuid,newgid)))
++      (void)mangoo_close(handle);
++  return 0;  
++}
++
+ static int mf_utime(const char *path, struct utimbuf *utb)
+ {
+ 	struct mangoo_handle *handle = NULL;
+@@ -393,6 +407,7 @@ static struct fuse_operations mf_ops = {
+ 	.unlink = mf_remove,
+ 	.rmdir = mf_remove,
+ 	.chmod = mf_chmod,
++	.chown= mf_chown,
+ };
+ 
+ int main(int argc, char *argv[])
+diff -urp src/apps/fuse/mangoofuse.c~ src2/apps/fuse/mangoofuse.c~
+--- src/apps/fuse/mangoofuse.c~	2014-08-10 11:04:10.661242000 +0530
++++ src2/apps/fuse/mangoofuse.c~	2014-11-18 12:05:31.739495437 +0530
+@@ -112,9 +112,7 @@ static int mf_chmod(const char *path, mo
+   struct mangoo_handle *handle = NULL;
+   int error;
+   printf("mf_chmod\n");
+-  if ((error = mangoo_open(ms, path, mangoo_attr_interface, &handle))) { // I am calling this function on purpose.
+-    // If we want to get file handle by using its path then mangoo_open function does this.
+-    // But is it fair to open file only for sake of changing its mode?
++  if ((error = mangoo_open(ms, path, mangoo_attr_interface, &handle))) { 
+     printf("mf_getattr: %s\n", strerror(error));
+     return -error;
+   }
+@@ -122,6 +120,20 @@ static int mf_chmod(const char *path, mo
+       (void)mangoo_close(handle);
+   return 0;  
+ }
++
++static int mf_chown(const char *path,uid_t newuid,gid_t newgid)
++{
++  struct mangoo_handle *handle = NULL;
++  int error;
++  printf("mf_chown\n");
++  if ((error = mangoo_open(ms, path, mangoo_attr_interface, &handle))) { 
++    printf("mf_getattr: %s\n", strerror(error));
++    return -error;
++  }
++  if((error = mattr_chown(handle,newuid,newgid)))
++      (void)mangoo_close(handle);
++  return 0;  
++}
+ 
+ static int mf_utime(const char *path, struct utimbuf *utb)
+ {
+Binary files src/apps/fuse/mangoofuse.o and src2/apps/fuse/mangoofuse.o differ
+diff -urp src/lang/c/include/mangooapp.h src2/lang/c/include/mangooapp.h
+--- src/lang/c/include/mangooapp.h	2014-08-10 11:04:52.933243000 +0530
++++ src2/lang/c/include/mangooapp.h	2014-11-18 12:05:30.579495418 +0530
+@@ -47,6 +47,7 @@ int mattr_setatime(struct mangoo_handle
+ int mattr_getmode(struct mangoo_handle *mh, mode_t *mode);
+ int mattr_setmode(struct mangoo_handle *mh, mode_t mode);
+ int mattr_chmod(struct mangoo_handle *mh,mode_t mode);
++int mattr_chown(struct mangoo_handle *mh,uid_t newuid,gid_t newgid);
+ 
+ int mattr_getuid(struct mangoo_handle *mh, uid_t *uid);
+ int mattr_setuid(struct mangoo_handle *mh, uid_t uid);
+diff -urp src/lang/c/include/mangooapp.h~ src2/lang/c/include/mangooapp.h~
+--- src/lang/c/include/mangooapp.h~	2014-06-25 13:33:58.000000000 +0530
++++ src2/lang/c/include/mangooapp.h~	2014-08-10 11:04:52.933243000 +0530
+@@ -46,6 +46,7 @@ int mattr_setatime(struct mangoo_handle
+ 
+ int mattr_getmode(struct mangoo_handle *mh, mode_t *mode);
+ int mattr_setmode(struct mangoo_handle *mh, mode_t mode);
++int mattr_chmod(struct mangoo_handle *mh,mode_t mode);
+ 
+ int mattr_getuid(struct mangoo_handle *mh, uid_t *uid);
+ int mattr_setuid(struct mangoo_handle *mh, uid_t uid);
+diff -urp src/lang/c/include/mangoostore.h src2/lang/c/include/mangoostore.h
+--- src/lang/c/include/mangoostore.h	2014-08-10 11:05:34.289245000 +0530
++++ src2/lang/c/include/mangoostore.h	2014-11-18 12:01:45.139491763 +0530
+@@ -68,6 +68,7 @@ struct mangoo_attr_operations {
+ 
+ 	int (*mao_getgid)(struct mangoo_handle *, gid_t *gid);
+ 	int (*mao_setgid)(struct mangoo_handle *, gid_t gid);
++  int (*mao_chown)(struct mangoo_handle *,uid_t newuid,gid_t newgid);
+ 
+ 	int (*mao_close)(struct mangoo_handle *handle);
+ };
+diff -urp src/lang/c/include/mangoostore.h~ src2/lang/c/include/mangoostore.h~
+--- src/lang/c/include/mangoostore.h~	2014-06-25 13:56:21.000000000 +0530
++++ src2/lang/c/include/mangoostore.h~	2014-08-10 11:05:34.289245000 +0530
+@@ -61,6 +61,7 @@ struct mangoo_attr_operations {
+ 
+ 	int (*mao_getmode)(struct mangoo_handle *, mode_t *mode);
+ 	int (*mao_setmode)(struct mangoo_handle *, mode_t mode);
++	int (*mao_chmod)(struct mangoo_handle *,mode_t mode);
+ 
+ 	int (*mao_getuid)(struct mangoo_handle *, uid_t *uid);
+ 	int (*mao_setuid)(struct mangoo_handle *, uid_t uid);
+Binary files src/lang/c/lib/libmangoo.a and src2/lang/c/lib/libmangoo.a differ
+diff -urp src/lang/c/lib/mangoo.c src2/lang/c/lib/mangoo.c
+--- src/lang/c/lib/mangoo.c	2014-08-10 11:06:31.237247000 +0530
++++ src2/lang/c/lib/mangoo.c	2014-11-18 11:59:34.795489650 +0530
+@@ -243,6 +243,17 @@ int mattr_chmod(struct mangoo_handle *mh
+   return maop->mao_chmod(mh,mode);
+ }
+ 
++int mattr_chown(struct mangoo_handle *mh,uid_t newuid,gid_t newgid)
++{
++  struct mangoo_attr_operations *maop = 
++    (struct mangoo_attr_operations *)mh->mh_fvector;
++  if (!maop)
++    return EINVAL;
++  if (!maop->mao_chown)
++    return ENOSYS;
++  return maop->mao_chown(mh,newuid,newgid);
++}
++
+ int mattr_getuid(struct mangoo_handle *mh, uid_t *uid)
+ {
+ 	struct mangoo_attr_operations *maop =
+diff -urp src/lang/c/lib/mangoo.c~ src2/lang/c/lib/mangoo.c~
+--- src/lang/c/lib/mangoo.c~	2014-06-25 13:34:41.000000000 +0530
++++ src2/lang/c/lib/mangoo.c~	2014-08-10 11:06:31.237247000 +0530
+@@ -232,6 +232,17 @@ int mattr_setmode(struct mangoo_handle *
+ 	return maop->mao_setmode(mh, mode);
+ }
+ 
++int mattr_chmod(struct mangoo_handle *mh,mode_t mode)
++{
++  struct mangoo_attr_operations *maop = 
++    (struct mangoo_attr_operations *)mh->mh_fvector;
++  if (!maop)
++    return EINVAL;
++  if (!maop->mao_chmod)
++    return ENOSYS;
++  return maop->mao_chmod(mh,mode);
++}
++
+ int mattr_getuid(struct mangoo_handle *mh, uid_t *uid)
+ {
+ 	struct mangoo_attr_operations *maop =
+Binary files src/lang/c/lib/mangoo.o and src2/lang/c/lib/mangoo.o differ
+diff -urp src/stores/dbfs/attr.c src2/stores/dbfs/attr.c
+--- src/stores/dbfs/attr.c	2014-08-11 12:56:30.989111000 +0530
++++ src2/stores/dbfs/attr.c	2014-11-18 12:04:42.503494638 +0530
+@@ -244,6 +244,14 @@ static int dbfs_chmod(struct mangoo_hand
+   return dbfs_write_attr(dh->dbp, dh->attr_ddk, &dh->attr_ddd);
+ }
+ 
++static int dbfs_chown(struct mangoo_handle *mh, uid_t newuid, gid_t newgid)
++{
++  struct dbfs_handle *dh = (struct dbfs_handle *)mh;
++  //printf("changing mode : %o -> %o\n",dh->attr_ddd.ddd_mode,(uint32_t)mode);
++  dh->attr_ddd.ddd_uid=(uint32_t)newuid;
++  dh->attr_ddd.ddd_gid=(uint32_t)newgid;
++  return dbfs_write_attr(dh->dbp, dh->attr_ddk, &dh->attr_ddd);
++}
+ 
+ static int dbfs_getuid(struct mangoo_handle *mh, uid_t *uid)
+ {
+@@ -304,6 +312,7 @@ struct mangoo_attr_operations dbfs_attr_
+ 	.mao_getgid = dbfs_getgid,
+ 	.mao_close = dbfs_close,
+ 	.mao_chmod = dbfs_chmod,
++	.mao_chown = dbfs_chown,
+ };
+ 
+ int dbfs_aopen(struct mangoo_store *storep, const char *locator, struct mangoo_handle **mhpp)
+diff -urp src/stores/dbfs/attr.c~ src2/stores/dbfs/attr.c~
+--- src/stores/dbfs/attr.c~	2014-08-10 11:07:47.309250000 +0530
++++ src2/stores/dbfs/attr.c~	2014-08-11 12:56:30.989111000 +0530
+@@ -221,8 +221,8 @@ static int dbfs_setatime(struct mangoo_h
+ 
+ 	printf("dbfs_setatime:1\n");
+ 	dh->attr_ddd.ddd_atime = atime;
+-
+ 	return dbfs_write_attr(dh->dbp, dh->attr_ddk, &dh->attr_ddd);
++
+ }
+ 
+ 
+@@ -241,7 +241,7 @@ static int dbfs_chmod(struct mangoo_hand
+   struct dbfs_handle *dh = (struct dbfs_handle *)mh;
+   printf("changing mode : %o -> %o\n",dh->attr_ddd.ddd_mode,(uint32_t)mode);
+   dh->attr_ddd.ddd_mode=(uint32_t)mode;
+-  return 0;
++  return dbfs_write_attr(dh->dbp, dh->attr_ddk, &dh->attr_ddd);
+ }
+ 
+ 
+Binary files src/stores/dbfs/attr.o and src2/stores/dbfs/attr.o differ
+Binary files src/stores/dbfs/libdbfs.a and src2/stores/dbfs/libdbfs.a differ
+Binary files src/stores/dbfs/mkdbfs and src2/stores/dbfs/mkdbfs differ

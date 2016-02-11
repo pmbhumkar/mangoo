@@ -1,0 +1,2 @@
+#!/bin/bash
+gcc -g -I../lang/c/include myapp.c -o myapp -L../lang/c/lib -lmangoo -L../stores/dbfs -ldbfs -L/usr/lib/i386-linux-gnu -ldb

@@ -1,0 +1,112 @@
+diff -urp src/apps/fuse/mangoofuse.c src2/apps/fuse/mangoofuse.c
+--- src/apps/fuse/mangoofuse.c	2015-06-06 08:36:42.523657177 +0530
++++ src2/apps/fuse/mangoofuse.c	2014-06-25 13:45:02.000000000 +0530
+@@ -66,20 +66,24 @@ static int mf_getattr(const char *path,
+ 	if ((error = mattr_getsize(handle, &stbuf->st_size)))
+ 		goto errout2;
+ 
+-	printf("mf_getattr:7 %o\n", (int)stbuf->st_mode);
++	printf("mf_getattr:7 %s\n", path);
++	if ((error = mattr_getmode(handle, &stbuf->st_mode)))
++		goto errout2;
++
++	printf("mf_getattr:8 %o\n", (int)stbuf->st_mode);
+ 	if ((error = mattr_gettype(handle, &mt)))
+ 		goto errout2;
+ 
+-	printf("mf_getattr:8 %d\n", (int)mt);
++	printf("mf_getattr:9 %d\n", (int)mt);
+ 	switch (mt) {
+ 		case mangoo_data:
+-			printf("mf_getattr:8.1 data\n");
++			printf("mf_getattr:9.1 data\n");
+ 			stbuf->st_nlink = 1;
+ 			stbuf->st_mode |= S_IFREG;
+ 			break;
+ 
+ 		case mangoo_container:
+-			printf("mf_getattr:8.2 container\n");
++			printf("mf_getattr:9.2 container\n");
+ 			stbuf->st_nlink = 2;
+ 			stbuf->st_mode |= S_IFDIR;
+ 			break;
+@@ -89,7 +93,7 @@ static int mf_getattr(const char *path,
+ 			goto errout2;
+ 	}
+ 
+-	printf("mf_getattr:9\n");
++	printf("mf_getattr:10\n");
+ 	if ((error = mangoo_close(handle)))
+ 		goto errout1;
+ 
+diff -urp src/lang/c/include/mangooapp.h src2/lang/c/include/mangooapp.h
+--- src/lang/c/include/mangooapp.h	2015-06-06 08:33:48.715652523 +0530
++++ src2/lang/c/include/mangooapp.h	2014-06-25 13:33:58.000000000 +0530
+@@ -44,6 +44,7 @@ int mattr_setmtime(struct mangoo_handle
+ int mattr_getatime(struct mangoo_handle *handle, time_t *atime);
+ int mattr_setatime(struct mangoo_handle *handle, time_t atime);
+ 
++int mattr_getmode(struct mangoo_handle *mh, mode_t *mode);
+ int mattr_setmode(struct mangoo_handle *mh, mode_t mode);
+ 
+ int mattr_getuid(struct mangoo_handle *mh, uid_t *uid);
+diff -urp src/lang/c/include/mangoostore.h src2/lang/c/include/mangoostore.h
+--- src/lang/c/include/mangoostore.h	2015-06-06 08:34:18.151653311 +0530
++++ src2/lang/c/include/mangoostore.h	2014-06-25 13:56:21.000000000 +0530
+@@ -59,6 +59,7 @@ struct mangoo_attr_operations {
+ 	int (*mao_getatime)(struct mangoo_handle *handle, time_t *atime);
+ 	int (*mao_setatime)(struct mangoo_handle *handle, time_t atime);
+ 
++	int (*mao_getmode)(struct mangoo_handle *, mode_t *mode);
+ 	int (*mao_setmode)(struct mangoo_handle *, mode_t mode);
+ 
+ 	int (*mao_getuid)(struct mangoo_handle *, uid_t *uid);
+diff -urp src/lang/c/lib/mangoo.c src2/lang/c/lib/mangoo.c
+--- src/lang/c/lib/mangoo.c	2015-06-06 08:34:44.699654022 +0530
++++ src2/lang/c/lib/mangoo.c	2014-06-25 13:34:41.000000000 +0530
+@@ -210,6 +210,17 @@ int mattr_setatime(struct mangoo_handle
+ 	return maop->mao_setatime(mh, atime);
+ }
+ 
++int mattr_getmode(struct mangoo_handle *mh, mode_t *mode)
++{
++	struct mangoo_attr_operations *maop =
++		(struct mangoo_attr_operations *)mh->mh_fvector;
++	if (!maop)
++		return EINVAL;
++	if (!maop->mao_getmode)
++		return ENOSYS;
++	return maop->mao_getmode(mh, mode);
++}
++
+ int mattr_setmode(struct mangoo_handle *mh, mode_t mode)
+ {
+ 	struct mangoo_attr_operations *maop =
+diff -urp src/stores/dbfs/attr.c src2/stores/dbfs/attr.c
+--- src/stores/dbfs/attr.c	2015-06-06 08:35:27.463655167 +0530
++++ src2/stores/dbfs/attr.c	2014-06-25 13:35:18.000000000 +0530
+@@ -226,6 +226,16 @@ static int dbfs_setatime(struct mangoo_h
+ }
+ 
+ 
++static int dbfs_getmode(struct mangoo_handle *mh, mode_t *mode)
++{
++	struct dbfs_handle *dh = (struct dbfs_handle*)mh;
++
++	printf("dbfs_getmode:1\n");
++	*mode = (mode_t)dh->attr_ddd.ddd_mode;
++
++	return 0;
++}
++
+ static int dbfs_getuid(struct mangoo_handle *mh, uid_t *uid)
+ {
+ 	struct dbfs_handle *dh = (struct dbfs_handle*)mh;
+@@ -280,6 +290,7 @@ struct mangoo_attr_operations dbfs_attr_
+ 	.mao_setmtime = dbfs_setmtime,
+ 	.mao_getatime = dbfs_getatime,
+ 	.mao_setatime = dbfs_setatime,
++	.mao_getmode = dbfs_getmode,
+ 	.mao_getuid = dbfs_getuid,
+ 	.mao_getgid = dbfs_getgid,
+ 	.mao_close = dbfs_close

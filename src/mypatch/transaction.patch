@@ -1,0 +1,53 @@
+--- mangoo.c	2015-03-20 09:58:21.165019904 +0530
++++ newmangoo.c	2015-03-19 12:00:28.684023330 +0530
+@@ -11,9 +11,50 @@
+ #include <malloc.h>
+ #include <string.h>
+ 
++#include <db.h>
+ #include <mangooapp.h>
+ #include <mangoostore.h>
+ 
++#define DBENV_DIR "/tmp/TXNAPP"
++
++void env_open(DB_ENV **dbenvp)
++{
++  DB_ENV *mydbenv;
++  int ret;
++  
++  /* Create the environment handle. */
++  if ((ret = db_env_create(&mydbenv, 0)) != 0) {
++    fprintf(stderr,
++	    "txnapp: db_env_create: %s\n", db_strerror(ret));
++    exit (1);
++  }
++
++
++  /* Set up error handling. */
++  mydbenv->set_errpfx(mydbenv, "txnapp");
++
++
++  /*
++   * Open a transactional environment:
++   *create if it doesn't exist
++   *free-threaded handle
++   *run recovery
++   *read/write owner only
++   */
++  if ((ret = mydbenv->open(mydbenv, DBENV_DIR,
++			      DB_CREATE | DB_INIT_LOG | DB_INIT_LOCK |
++			 DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER | DB_THREAD,
++			 S_IRUSR | S_IWUSR)) != 0) {
++
++    printf("Error in OPENING ENVIRONMENT...!!! \n");    
++    (void)mydbenv->close(mydbenv, 0);
++    mydbenv->err(mydbenv, ret, "dbenv->open: %s", DBENV_DIR);
++    exit (1);
++  }
++  printf("ENVIRONMENT CREATED...!!!!\n");
++  *dbenvp = mydbenv;
++}
++
+ int mangoo_initstore(const char *scheme, const char *rl, struct mangoo_store **mspp)
+ {
+ 	int error;

@@ -1,0 +1,4 @@
+Code in the directory src is distributed under the terms of two different licenses. 
+
+GPL given in the file COPYING applies to the directories apps and stores.
+LGPL given in the file COPYING.LIB applies to the direoctory lang.

@@ -1,0 +1,15 @@
+CC	= gcc -g
+INC1	= ../lang/c/include
+INC2	= ../stores/dbfs	
+INCDIRS = -I${INC1} -I${INC2}
+LIBDIR1	= ../lang/c/lib
+LIBDIR2	= ../stores/dbfs
+LIBJL1	= ${LIBDIR1}/libmangoo.a
+LIBJL2	= ${LIBDIR2}/libdbfs.a
+LIBTOOLS  = ${LIBJL2} ${LIBJL1}
+LDFLAGS   = ${LIBTOOLS} 
+CFLAGS    = ${INCDIRS}
+
+${CC}	${CFLAGS}	-c	$	*.c
+
+${CC} ${CFLAGS} -o $@ ${OBJECTS} ${LDFLAGS}	
